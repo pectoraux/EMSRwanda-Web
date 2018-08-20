@@ -1,0 +1,32 @@
+<h1>Welcome to Laterite</h1>
+
+
+<material-tab-panel>
+  <material-tab label="Dashboard">
+    <div>
+      <h2> Profile </h2>
+
+      <div class="history">
+        <visualize-winnings #vis
+                            class="history__vis"></visualize-winnings>
+        <div class="clear-floats"></div>
+      </div>
+
+      <dashboard-component [settings]="settings"
+                          (settingsChanged)="updateFromSettings()">
+      </dashboard-component>
+    </div>
+  </material-tab>
+  <material-tab label="Projects">
+    <projects-component content="projects"></projects-component>
+  </material-tab>
+  <material-tab label="Requests">
+    <requests-component content="requests"></requests-component>
+  </material-tab>
+
+  <material-tab label="Weeks">
+    <weeks-component></weeks-component>
+  </material-tab>
+
+</material-tab-panel>
+

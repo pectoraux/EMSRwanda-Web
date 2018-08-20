@@ -1,0 +1,250 @@
+<material-expansionpanel-set>
+  <material-expansionpanel
+      name="Primary Details"
+      (save)="settingsUpdated()"
+      (cancel)="resetWallet()">
+    <div>
+      <form #myForm="ngForm">
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="User Name"
+                  ngControl="user-name"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="User Role"
+                  ngControl="user-role"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="First Name"
+                  ngControl="first-name"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Last Name"
+                  ngControl="last-name"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Date of Birth"
+                  ngControl="dob"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Country"
+                  ngControl="country"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="National ID"
+                  ngControl="national-id"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Passport No"
+                  ngControl="passport-no"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Main Phone"
+                  ngControl="main-phone"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Sex"
+                  ngControl="sex"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Alt Phone 1"
+                  ngControl="alt-phone1"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Alt Phone 2"
+                  ngControl="alt-phone2"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="email1"
+                  ngControl="email1"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="email2"
+                  ngControl="email2"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="tin"
+                  ngControl="tin"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="cvstatuselec"
+                  ngControl="cvstatuselec"
+                  required>
+          </material-input>
+        </section>
+      </form>
+    </div>
+  </material-expansionpanel>
+  <material-expansionpanel class="betting-panel"
+      name="Banking Details"
+      (save)="settingsUpdated()"
+      (cancel)="resetBetting()">
+    <div>
+      <form #myForm="ngForm2">
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Bank Name"
+                  ngControl="bank-name"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Bank Account No"
+                  ngControl="bank-acct-no"
+                  required>
+          </material-input>
+        </section>
+      </form>
+    </div>
+  </material-expansionpanel>
+  <material-expansionpanel
+      name="Insurance Details"
+      (save)="settingsUpdated()"
+      (cancel)="resetOther()">
+    <div>
+      <form #myForm="ngForm3">
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Insurance"
+                  ngControl="insurance"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Insurance No"
+                  ngControl="insurance-no"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Insurance Copy"
+                  ngControl="insurance-cpy"
+                  required>
+          </material-input>
+        </section>
+      </form>
+    </div>
+  </material-expansionpanel>
+
+  <material-expansionpanel class="betting-panel"
+          name="Emergency Details"
+          (save)="settingsUpdated()"
+          (cancel)="resetOther()">
+    <div>
+      <form #myForm="ngForm4">
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Emergency Contact Name"
+                  ngControl="emergency-contact-name"
+                  required>
+          </material-input>
+        </section>
+        <section>
+          <material-input
+                  type="text"
+                  floatingLabel
+                  label="Emergency Contact No"
+                  ngControl="emergency-contact-phone"
+                  required>
+          </material-input>
+        </section>
+      </form>
+        <material-input *ngFor="let value of yearsOptions"
+                        [checked]="value == years"
+                        (checkedChange)="years = $event ? value : years">
+        </material-input>
+    </div>
+  </material-expansionpanel>
+</material-expansionpanel-set>

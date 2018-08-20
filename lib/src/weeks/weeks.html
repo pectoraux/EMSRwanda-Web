@@ -1,0 +1,34 @@
+<!-- Components info: https://webdev.dartlang.org/components -->
+  <div>
+    <p>
+      Select A Week You're Available And Click The Add Button.
+    </p>
+
+    <material-tree
+            [options]="nestedOptions"
+            [selection]="singleSelection"
+            [allowParentSingleSelection]="true">
+    </material-tree>
+
+  <material-fab mini raised
+                (trigger)="add()" >
+    <material-icon icon="add"></material-icon>
+  </material-fab>
+</div>
+
+<p *ngIf="items.isEmpty">
+  No Weeks Added Yet!    <strong>Add Your Weeks Availability Above.</strong>
+</p>
+
+<div *ngIf="items.isNotEmpty">
+  <ul>
+    <li *ngFor="let item of items; let i=index">
+      <material-checkbox #done materialTooltip="Mark item as done">
+      </material-checkbox>
+      <span [class.done]="done.checked">{{item}}</span>
+      <material-fab mini (trigger)="remove(i)">
+        <material-icon icon="delete"></material-icon>
+      </material-fab>
+    </li>
+  </ul>
+</div>

@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'src/requests/requests.dart';
 import 'src/projects/projects.dart';
 import 'src/dashboard/dashboard_component.dart';
+import 'src/weeks/weeks.dart';
 
 const _fastPulse = Duration(milliseconds: 5);
 
@@ -34,6 +35,7 @@ const _normalPulse = Duration(milliseconds: 200);
     RequestsComponent,
     ProjectsComponent,
     DashboardComponent,
+    WeeksComponent,
   ],
   providers: [
     materialProviders,

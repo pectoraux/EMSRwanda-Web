@@ -1,0 +1,14 @@
+<div class="projects" [ngSwitch]="content">
+  <material-expansionpanel-set>
+    <material-expansionpanel *ngFor="let idx of idxOptions"
+            name= '{{projectOptions[idx]}}'
+            secondaryText='{{locationOptions[idx]}}'>
+
+      <material-input *ngFor="let value of yearsOptions"
+                      [checked]="value == years"
+                      (checkedChange)="years = $event ? value : years">
+      </material-input>
+    </material-expansionpanel>
+  </material-expansionpanel-set>
+
+</div>

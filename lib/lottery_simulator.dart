@@ -26,7 +26,7 @@ const _normalPulse = Duration(milliseconds: 200);
   styleUrls: ['lottery_simulator.css'],
   templateUrl: 'lottery_simulator.html',
   directives: [
-    materialDirectives, 
+    materialDirectives,
     ScoresComponent,
     StatsComponent,
     VisualizeWinningsComponent,

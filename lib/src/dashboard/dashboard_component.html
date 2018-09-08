@@ -1,169 +1,240 @@
 <material-expansionpanel-set>
   <material-expansionpanel
-      name="Primary Details"
-      (save)="settingsUpdated()"
-      (cancel)="resetWallet()">
-    <div>
-      <form #myForm="ngForm">
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="User Name"
-                  ngControl="user-name"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="User Role"
-                  ngControl="user-role"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="First Name"
-                  ngControl="first-name"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Last Name"
-                  ngControl="last-name"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Date of Birth"
-                  ngControl="dob"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Country"
-                  ngControl="country"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="National ID"
-                  ngControl="national-id"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Passport No"
-                  ngControl="passport-no"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Main Phone"
-                  ngControl="main-phone"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Sex"
-                  ngControl="sex"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Alt Phone 1"
-                  ngControl="alt-phone1"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="Alt Phone 2"
-                  ngControl="alt-phone2"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="email1"
-                  ngControl="email1"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="email2"
-                  ngControl="email2"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="tin"
-                  ngControl="tin"
-                  required>
-          </material-input>
-        </section>
-        <section>
-          <material-input
-                  type="text"
-                  floatingLabel
-                  label="cvstatuselec"
-                  ngControl="cvstatuselec"
-                  required>
-          </material-input>
-        </section>
-      </form>
-    </div>
+          name="Primary Details"
+          [closeOnSave]="closeOnSave()"
+          saveText = "{{getSaveText()}}"
+          (save)="onSave1(myForm1)" (open)="toggle(myForm1)" (close)="toggle(myForm1)"
+          (cancel)="toggle(myForm1)">
+
+    <form #myForm1="ngForm">
+      <section>
+        <material-input
+                type="text"
+                label="User Name"
+                floatingLabel
+                ngModel="{{dbService.userName}}"
+                ngControl="user-name"
+                disabled>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                label="User Role"
+                floatingLabel
+                ngModel="{{dbService.userRole}}"
+                ngControl="user-role"
+                disabled>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                label="User Status"
+                floatingLabel
+                ngModel="{{dbService.userStatus}}"
+                ngControl="user-status"
+                disabled>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.firstName}}"
+                label="First Name"
+                ngControl="first-name"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.lastName}}"
+                label="Last Name"
+                ngControl="last-name"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section [hidden]="!isDisabled()">
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.dob}}"
+                label="Date Of Birth"
+                ngControl="dob"
+                disabled
+                required>
+        </material-input>
+      </section>
+      <section [hidden]="isDisabled()">
+        <p>Date of Birth</p>
+        <material-datepicker [(date)]="optionalDate"
+                             [minDate]="limitToRange.start"
+                             [maxDate]="limitToRange.end"
+                             [required]="false">
+        </material-datepicker>
+        <br><br>
+      </section>
+      <section [hidden]="!isDisabled()">
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.country}}"
+                label="Country"
+                ngControl="country"
+                disabled
+                required>
+        </material-input>
+      </section>
+      <section [hidden]="isDisabled()">
+        <material-dropdown-select
+                [buttonText]="singleSelectLanguageLabel"
+                [selection]="singleSelectModel"
+                [options]="languageOptions"
+                [itemRenderer]="itemRenderer">
+        </material-dropdown-select>
+        <br><br>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.nationalID}}"
+                label="National ID"
+                ngControl="national-id"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.passportNo}}"
+                label="Passport No"
+                ngControl="passport-no"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.mainPhone}}"
+                label="Main Phone"
+                ngControl="main-phone"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section [hidden]="!isDisabled()">
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.sex}}"
+                label="Sex"
+                ngControl="sex"
+                disabled
+                required>
+        </material-input>
+      </section>
+      <section [hidden]="isDisabled()">
+        <p>Sex</p>
+        <material-radio-group>
+          <material-radio *ngFor="let value of sexOptions"
+                          [checked]="value == msex"
+                          (checkedChange)="msex = $event ? value : msex">
+            {{ value }}
+          </material-radio>
+        </material-radio-group>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.altPhone1}}"
+                label="Alt Phone 1"
+                ngControl="alt-phone1"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.altPhone2}}"
+                label="Alt Phone 2"
+                ngControl="alt-phone2"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="email"
+                floatingLabel
+                ngModel="{{dbService.email1}}"
+                label="Email 1"
+                ngControl="email1"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="email"
+                floatingLabel
+                ngModel="{{dbService.email2}}"
+                label="Email 2"
+                ngControl="email2"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.tin}}"
+                label="tin"
+                ngControl="tin"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+      <section>
+        <material-input
+                type="text"
+                floatingLabel
+                ngModel="{{dbService.cvStatusElec}}"
+                label="cvStatusElec"
+                ngControl="cvStatusElec"
+                [disabled]="isDisabled()"
+                required>
+        </material-input>
+      </section>
+    </form>
   </material-expansionpanel>
-  <material-expansionpanel class="betting-panel"
-      name="Banking Details"
-      (save)="settingsUpdated()"
-      (cancel)="resetBetting()">
+  <material-expansionpanel class="betting-panel" [closeOnSave]="closeOnSave()"
+                           name="Banking Details" saveText = "{{getSaveText()}}"  (open)="toggle(myForm2)" (close)="toggle(myForm2)"
+                           (save)="onSave2(myForm2)"
+                           (cancel)="toggle(myForm2)">
     <div>
-      <form #myForm="ngForm2">
+      <form #myForm2="ngForm">
         <section>
           <material-input
                   type="text"
                   floatingLabel
+                  ngModel="{{dbService.bankName}}"
                   label="Bank Name"
                   ngControl="bank-name"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -171,8 +242,10 @@
           <material-input
                   type="text"
                   floatingLabel
+                  ngModel="{{dbService.bankAcctNo}}"
                   label="Bank Account No"
                   ngControl="bank-acct-no"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -180,17 +253,20 @@
     </div>
   </material-expansionpanel>
   <material-expansionpanel
-      name="Insurance Details"
-      (save)="settingsUpdated()"
-      (cancel)="resetOther()">
+          name="Insurance Details"
+          saveText = "{{getSaveText()}}" (open)="toggle(myForm3)" (close)="toggle(myForm3)"
+          (save)="onSave3(myForm3)" [closeOnSave]="closeOnSave()"
+          (cancel)="toggle(myForm3)">
     <div>
-      <form #myForm="ngForm3">
+      <form #myForm3="ngForm">
         <section>
           <material-input
                   type="text"
                   floatingLabel
                   label="Insurance"
                   ngControl="insurance"
+                  ngModel="{{dbService.insurance}}"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -200,6 +276,8 @@
                   floatingLabel
                   label="Insurance No"
                   ngControl="insurance-no"
+                  ngModel="{{dbService.insuranceNo}}"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -209,6 +287,8 @@
                   floatingLabel
                   label="Insurance Copy"
                   ngControl="insurance-cpy"
+                  ngModel="{{dbService.insuranceCpy}}"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -217,17 +297,19 @@
   </material-expansionpanel>
 
   <material-expansionpanel class="betting-panel"
-          name="Emergency Details"
-          (save)="settingsUpdated()"
-          (cancel)="resetOther()">
+                           name="Emergency Details" saveText = "{{getSaveText()}}" (open)="toggle(myForm4)" (close)="toggle(myForm4)"
+                           (save)="onSave4(myForm4)" [closeOnSave]="closeOnSave()"
+                           (cancel)="toggle(myForm4)">
     <div>
-      <form #myForm="ngForm4">
+      <form #myForm4="ngForm">
         <section>
           <material-input
                   type="text"
                   floatingLabel
                   label="Emergency Contact Name"
                   ngControl="emergency-contact-name"
+                  ngModel="{{dbService.emergencyContactName}}"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
@@ -237,14 +319,19 @@
                   floatingLabel
                   label="Emergency Contact No"
                   ngControl="emergency-contact-phone"
+                  ngModel="{{dbService.emergencyContactPhone}}"
+                  [disabled]="isDisabled()"
                   required>
           </material-input>
         </section>
       </form>
-        <material-input *ngFor="let value of yearsOptions"
-                        [checked]="value == years"
-                        (checkedChange)="years = $event ? value : years">
-        </material-input>
     </div>
+  </material-expansionpanel>
+  <material-expansionpanel disabled>
+    <material-input *ngFor="let value of yearsOptions"
+                    [checked]="value == years"
+                    disabled
+                    (checkedChange)="years = $event ? value : years">
+    </material-input>
   </material-expansionpanel>
 </material-expansionpanel-set>

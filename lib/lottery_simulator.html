@@ -1,6 +1,6 @@
-<h1>Welcome to Laterite</h1>
-
-
+<div class="fit layout vertical">
+<app-header></app-header>
+  <div id="emsApp" [hidden]="dbService.user == null">
 <material-tab-panel>
   <material-tab label="Dashboard">
     <div>
@@ -12,16 +12,16 @@
         <div class="clear-floats"></div>
       </div>
 
-      <dashboard-component [settings]="settings"
+      <dashboard-component [settings]="settings" [dbService]="dbService"
                           (settingsChanged)="updateFromSettings()">
       </dashboard-component>
     </div>
   </material-tab>
   <material-tab label="Projects">
-    <projects-component content="projects"></projects-component>
+    <projects-component content="projects" [dbService]="dbService"></projects-component>
   </material-tab>
   <material-tab label="Requests">
-    <requests-component content="requests"></requests-component>
+    <requests-component content="requests" [dbService]="dbService"></requests-component>
   </material-tab>
 
   <material-tab label="Weeks">
@@ -29,4 +29,6 @@
   </material-tab>
 
 </material-tab-panel>
+</div>
 
+</div>

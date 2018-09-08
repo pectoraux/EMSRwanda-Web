@@ -4,6 +4,7 @@
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
+import 'package:components_codelab/src/services/database_service.dart';
 
 @Component(
   selector: 'requests-component',
@@ -19,8 +20,10 @@ import 'package:angular_components/angular_components.dart';
     MaterialExpansionPanelSet,
     MaterialRadioComponent,
     MaterialRadioGroupComponent,
+    MaterialButtonComponent,
     NgFor
   ],
+  providers: [materialProviders, DatabaseService],
 )
 class RequestsComponent {
   @Input()
@@ -33,4 +36,10 @@ class RequestsComponent {
   String project;
   final locationOptions = ['Made To You', 'Made By You', 'Made By You', 'Made To You', 'Made By You', 'Made To You'];
   String location;
+
+  @Input()
+  DatabaseService dbService;
+
+  void settingsUpdated() {
+  }
 }

@@ -4,6 +4,8 @@
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
+import 'package:angular_forms/angular_forms.dart';
+import 'package:components_codelab/src/services/database_service.dart';
 
 @Component(
   selector: 'projects-component',
@@ -11,6 +13,7 @@ import 'package:angular_components/angular_components.dart';
   styleUrls: ['projects.css'],
   directives: [
     materialDirectives,
+    formDirectives,
     NgSwitch,
     NgSwitchWhen,
     NgSwitchDefault,
@@ -19,18 +22,27 @@ import 'package:angular_components/angular_components.dart';
     MaterialExpansionPanelSet,
     MaterialRadioComponent,
     MaterialRadioGroupComponent,
+    MaterialSaveCancelButtonsDirective,
+    NgModel,
     NgFor
   ],
+  providers: [materialProviders, DatabaseService],
 )
 class ProjectsComponent {
   @Input()
   String content;
   final yearsOptions = [1,2,3];
   int years;
-  final idxOptions = [0,1,2,3,4,5];
   int index;
-  final projectOptions = ['FSI', 'MISM', 'GER', 'Student\'s Project', 'ELI', 'VIM'];
   String project;
-  final locationOptions = ['Kigali', 'Gisenyi', 'Gaculiro', 'Kacyiru', 'Kisimenti', 'Remera'];
   String location;
+  bool isStaff = false;
+
+  @Input()
+  DatabaseService dbService;
+
+  void onSave(int idx) {
+    dbService.sendWorkRequest(idx);
+  }
+
 }

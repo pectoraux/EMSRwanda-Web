@@ -1,11 +1,21 @@
 <div class="requests" [ngSwitch]="content">
   <material-expansionpanel-set>
-    <material-expansionpanel *ngFor="let idx of idxOptions"
-            name= '{{projectOptions[idx]}}'
-            secondaryText='{{locationOptions[idx]}}'>
-
+    <material-expansionpanel *ngFor="let idx of dbService.idxOptions2"
+                             name= '{{dbService.requestOptions[idx]}}'
+                             secondaryText='{{dbService.requestTypes[idx]}}' saveText = "Accept Request"
+                             cancelText="Reject Request"
+                             [saveDisabled]="dbService.requestTypes[idx]=='Made By You'">
+      <!--<div>-->
+      <!--<p><strong>Made By:</strong>  {{dbService.requestProjectAuthorIDs[idx]}}</p>-->
+      <!--<p><strong>Start Date:</strong> {{dbService.requestProjectStartDates[idx]}}</p>-->
+      <!--<p><strong>End Date:</strong> {{dbService.requestProjectEndDates[idx]}}</p>-->
+      <!--<p><strong>Description:</strong><br/><br/>  {{dbService.requestProjectDescriptions[idx]}}</p>-->
+      <!--</div>-->
+    </material-expansionpanel>
+    <material-expansionpanel disabled>
       <material-input *ngFor="let value of yearsOptions"
                       [checked]="value == years"
+                      disabled
                       (checkedChange)="years = $event ? value : years">
       </material-input>
     </material-expansionpanel>

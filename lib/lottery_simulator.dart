@@ -17,6 +17,8 @@ import 'src/requests/requests.dart';
 import 'src/projects/projects.dart';
 import 'src/dashboard/dashboard_component.dart';
 import 'src/weeks/weeks.dart';
+import 'src/app_header/app_header.dart';
+import 'src/services/database_service.dart';
 
 const _fastPulse = Duration(milliseconds: 5);
 
@@ -36,14 +38,18 @@ const _normalPulse = Duration(milliseconds: 200);
     ProjectsComponent,
     DashboardComponent,
     WeeksComponent,
+    AppHeader,
+    MaterialInputComponent,
   ],
   providers: [
     materialProviders,
     ClassProvider(Settings),
+    DatabaseService,
   ],
 )
 class AppComponent implements OnInit {
   final Settings _settings;
+  final DatabaseService dbService;
 
   Timer _pulse;
 
@@ -77,7 +83,7 @@ class AppComponent implements OnInit {
 
   final _dateFormat = DateFormat.yMMMMd();
 
-  AppComponent(this._settings);
+  AppComponent(this._settings, DatabaseService this.dbService);
 
   String get currentDay {
     var date = settings.now.add(Duration(days: day));

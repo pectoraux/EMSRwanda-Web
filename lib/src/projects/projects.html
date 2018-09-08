@@ -1,14 +1,26 @@
 <div class="projects" [ngSwitch]="content">
   <material-expansionpanel-set>
-    <material-expansionpanel *ngFor="let idx of idxOptions"
-            name= '{{projectOptions[idx]}}'
-            secondaryText='{{locationOptions[idx]}}'>
+    <material-expansionpanel *ngFor="let idx of dbService.idxOptions"
+                             name= '{{dbService.projectOptions[idx]}}'
+                             secondaryText='{{dbService.locationOptions[idx]}}'
+                             saveText = 'Send Work Request'
+                             [cancelDisplayed]='false'>
 
+      <div>
+        <p><strong>Author ID:</strong> {{dbService.authorIDs[idx]}}</p>
+        <p><strong>Start Date:</strong> {{dbService.startDates[idx]}}</p>
+        <p><strong>End Date:</strong>  {{dbService.endDates[idx]}}</p>
+        <p><strong>Description:</strong><br/><br/>  {{dbService.descriptions[idx]}}</p>
+      </div>
+    </material-expansionpanel>
+    <material-expansionpanel disabled>
       <material-input *ngFor="let value of yearsOptions"
                       [checked]="value == years"
+                      disabled
                       (checkedChange)="years = $event ? value : years">
       </material-input>
     </material-expansionpanel>
+
   </material-expansionpanel-set>
 
 </div>

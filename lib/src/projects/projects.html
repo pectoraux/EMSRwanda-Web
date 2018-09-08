@@ -4,7 +4,7 @@
                              name= '{{dbService.projectOptions[idx]}}'
                              secondaryText='{{dbService.locationOptions[idx]}}'
                              saveText = 'Send Work Request' [saveDisabled]="saveDisabled(idx)" (save)="onSave(idx)"
-                             [cancelDisplayed]='false'>
+                             [cancelDisplayed]='cancelDisplayed(idx)' cancelText="{{getCancelText(idx)}}">
 
       <div>
         <p><strong>Author ID:</strong> {{dbService.authorIDs[idx]}}</p>

@@ -48,4 +48,17 @@ class ProjectsComponent {
   bool saveDisabled(int idx){
     return dbService.isStaff[idx] || dbService.requestProjectIds.contains(dbService.projectIds[idx]) || dbService.sentWorkRequest[idx];
   }
+
+  bool cancelDisplayed(int idx){
+    return dbService.isStaff[idx] || dbService.requestProjectIds.contains(dbService.projectIds[idx]) || dbService.sentWorkRequest[idx];
+  }
+
+  String getCancelText(int idx){
+    if(dbService.isStaff[idx]){
+      return 'Staff Member';
+    }else if(dbService.requestProjectIds.contains(dbService.projectIds[idx]) || dbService.sentWorkRequest[idx]){
+      return 'Request Pending';
+    }
+    return '';
+  }
 }

@@ -138,6 +138,10 @@ class DatabaseService {
           startDates.add(doc.data()['startDate'].toString().split(' ')[0]);
           endDates.add(doc.data()['endDate'].toString().split(' ')[0]);
           descriptions.add(doc.data()['projectDescription']);
+          currentGroup = doc.data()['currentGroup'].toString();
+          teamCount = doc.data()['teamCount'].toString();
+          staffCount = doc.data()['staffCount'].toString();
+          currentGroupCount = doc.data()['currentGroupCount'].toString();
           i += 1;
         });
 
@@ -234,7 +238,7 @@ class DatabaseService {
     String projectId = requestProjectIds[idx];
     fb.firestore().runTransaction((transaction) async {
       String mId;
-      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d){
+      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d) async{
         if(d.data()['page'] == 'project_details'){
           mId = d.data()['from'];
         }else {
@@ -246,14 +250,15 @@ class DatabaseService {
         await reference1.set({});
 
         // Get Gender
-        DocumentSnapshot userSnap = await (fb.firestore().doc('users/${mId}}')).get();
-        String gender = userSnap.data()['sex'].toString();
-        print("USER GENDER IS ${gender}");
+        DocumentSnapshot userSnap = await reference1.parent.parent.get();
+        gender = userSnap.data()['sex'];
+//        print("USER GENDER IS ${gender} ");
+
         // Inserting User's records in project
         DocumentReference reference2 = fb.firestore().doc('projects/${projectId}/users/${mId}');
         await reference2.set({
           'comments': [],
-          'userGroup': (currentGroupCount == teamCount) ? int.parse(currentGroup)+1 : int.parse(currentGroup),
+          'userGroup': (int.parse(currentGroupCount) == int.parse(teamCount)) ? int.parse(currentGroup)+1 : int.parse(currentGroup),
           'communicationRating': -1.0,
           'initiativeTakingRating': -1.0,
           'overAllRating': -1.0,
@@ -268,8 +273,8 @@ class DatabaseService {
           DocumentReference projectRef = fb.firestore().doc("projects/${projectId}");
           DocumentSnapshot snap = await reference.get();
           data = snap.data();
-          data['currentGroupCount'] = (currentGroupCount == teamCount) ? 0 : int.parse(currentGroupCount) + 1;
-          data['currentGroup'] = (currentGroupCount == teamCount) ? int.parse(currentGroup) + 1 : int.parse(currentGroup);
+          data['currentGroupCount'] = (int.parse(currentGroupCount) == int.parse(teamCount)) ? 0 : int.parse(currentGroupCount) + 1;
+          data['currentGroup'] = (int.parse(currentGroupCount) == int.parse(teamCount)) ? int.parse(currentGroup) + 1 : int.parse(currentGroup);
           await reference.set(data);
         });
       });
@@ -283,8 +288,9 @@ class DatabaseService {
       }).whenComplete((){
         fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').delete();
         fb.firestore().doc('users/${mId}/pending_requests/${requestId}').delete();
-        madeRequestDecision[idx] = true;
       });
+    }).whenComplete((){
+      madeRequestDecision[idx] = true;
     });
   }
 

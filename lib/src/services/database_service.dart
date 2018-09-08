@@ -67,7 +67,7 @@ class DatabaseService {
   String emergencyContactPhone, emergencyContactName, insurance, insuranceNo, insuranceCpy;
   List<String> projectOptions = [], projectIds = [], locationOptions = [], requestOptions = [], requestTypes = [], requestProjectIds = [];
   List<int> idxOptions = [], idxOptions2 = [];
-  List<bool> isStaff = [];
+  List<bool> isStaff = [], sentWorkRequest = [];
   List<String> author = [], startDates = [], endDates = [], descriptions = [], authorIDs = [];
   List<String> requestProjectAuthor = [], requestProjectStartDates = [], requestProjectEndDates = [], requestProjectDescriptions = [], requestProjectAuthorIDs = [];
   bool invalidPassword;
@@ -132,6 +132,7 @@ class DatabaseService {
           locationOptions.add(doc.data()['locations'].toString());
           idxOptions.add(i);
           isStaff.add(false);
+          sentWorkRequest.add(false);
           authorIDs.add(doc.data()['author']);
           startDates.add(doc.data()['startDate'].toString().split(' ')[0]);
           endDates.add(doc.data()['endDate'].toString().split(' ')[0]);
@@ -220,6 +221,7 @@ class DatabaseService {
         fb.firestore().runTransaction((transaction) async {
           DocumentReference reference = fb.firestore().collection('send-work-request').doc();
           await transaction.set(reference, request_data);
+          sentWorkRequest[idx] = true;
         });
       });
   }

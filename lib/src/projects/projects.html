@@ -3,7 +3,7 @@
     <material-expansionpanel *ngFor="let idx of dbService.idxOptions"
                              name= '{{dbService.projectOptions[idx]}}'
                              secondaryText='{{dbService.locationOptions[idx]}}'
-                             saveText = 'Send Work Request'
+                             saveText = 'Send Work Request' [saveDisabled]="saveDisabled(idx)" (save)="onSave(idx)"
                              [cancelDisplayed]='false'>
 
       <div>

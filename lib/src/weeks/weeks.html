@@ -16,8 +16,15 @@
   </material-fab>
 </div>
 
+
 <p *ngIf="items.isEmpty">
   No Weeks Added Yet!    <strong>Add Your Weeks Availability Above.</strong>
+</p>
+<p *ngIf="!items.isEmpty">
+  <material-fab mini raised
+                (trigger)="save()" >
+    <material-icon icon="save"></material-icon>
+  </material-fab>
 </p>
 
 <div *ngIf="items.isNotEmpty">

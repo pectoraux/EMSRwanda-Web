@@ -32,36 +32,106 @@ SelectionOptions.fromList(_commonOptionList);
 /// An example data set of non-hierarchical data that is [Filterable].
 final SelectionOptions filterableFlatOptions =
 StringSelectionOptions(_commonOptionList);
+final List<String> months = <String>[
+  "",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+final _commonParentChildrenMap = getDates();
 
-final _commonParentChildrenMap = {
-  'August': [
-    OptionGroup([
-      'August - Week3',
-      'August - Week4'
-    ])
-  ],
-  'September': [
-    OptionGroup(
-        ['September - Week1', 'September - Week2', 'September - Week3', 'September - Week4'])
-  ],
-  'October': [
-    OptionGroup(
-        ['October - Week1', 'October - Week2', 'October - Week3', 'October - Week4'])
-  ],
-  'November': [
-    OptionGroup(
-        ['November - Week1', 'November - Week2', 'November - Week3', 'November - Week4'])
-  ],
-  'December': [
-    OptionGroup(
-        ['December - Week1', 'December - Week2', 'December - Week3', 'December - Week4'])
-  ],
-};
+ getDates(){
+   Map<dynamic, List<OptionGroup<dynamic>>> _dates = {};
+   int extra = 0;
+   for(int i = 0; i < 5 + extra; i++) {
+     int idx = (DateTime.now().month+i)%13;
+     if(idx != 0) {
+       String currMonth = months[idx];
+       print("PRINTING MONTH ${currMonth}");
+       _dates[currMonth] = getWeeks(months.indexOf(currMonth));
+     }else if (idx == 0){
+       extra = 1;
+     }
+   }
+   return _dates;
+}
 
+List<OptionGroup<dynamic>> getWeeks(int month){
+  OptionGroup<dynamic> mres = OptionGroup<dynamic>([]);
+   DateTime currWeek;
+   int this_year = DateTime.now().year;
+  int this_month = DateTime.now().month;
+  int this_day = DateTime.now().day;
+   print("DATETIME ${DateTime.now().month}  MONTH ${month}");
+   if(DateTime.now().month == month){
+     for(int j = 1; j < 4; j++) {
+       currWeek = DateTime.utc(this_year, this_month, this_day).add(Duration(days: 7 * j));
+       if(currWeek.month == month) {
+         int weeks_from_today = (currWeek.difference(DateTime(this_year, this_month, 1)).inDays/7).round();
+         print("WEEKDAY  ${currWeek} ${weeks_from_today}");
+         mres.add(months[month] +' - Week${weeks_from_today}');
+       }
+     }
+   }else{
+     mres.add(months[month] + ' - Week1');
+     mres.add(months[month] + ' - Week2');
+     mres.add(months[month] + ' - Week3');
+     mres.add(months[month] + ' - Week4');
+   }
+   return [mres];
+}
+
+//  'August': [
+//    OptionGroup([
+//      'August - Week3',
+//      'August - Week4'
+//    ])
+//  ],
+//  'September': [
+//    OptionGroup(
+//        ['September - Week1', 'September - Week2', 'September - Week3', 'September - Week4'])
+//  ],
+//  'October': [
+//    OptionGroup(
+//        ['October - Week1', 'October - Week2', 'October - Week3', 'October - Week4'])
+//  ],
+//  'November': [
+//    OptionGroup(
+//        ['November - Week1', 'November - Week2', 'November - Week3', 'November - Week4'])
+//  ],
+//  'December': [
+//    OptionGroup(
+//        ['December - Week1', 'December - Week2', 'December - Week3', 'December - Week4'])
+//  ],
+
+List monthOptions = getMonthOptions();
+ List getMonthOptions(){
+   List result = [];
+   int extra = 0;
+   for(int i = 0; i < 5+extra; i++) {
+     int idx = (DateTime
+         .now()
+         .month + i) % 13;
+     if (idx != 0) {
+       result.add(months[idx]);
+     }else if (idx == 0){
+       extra = 1;
+     }
+   }
+   return result;
+ }
 /// An example data set of hierarchical data.
 final SelectionOptions nestedOptions = _NestedSelectionOptions([
-  OptionGroup(
-      ['August', 'September', 'October', 'November', 'December'])
+  OptionGroup(getMonthOptions())
 ], _commonParentChildrenMap);
 
 /// A slight restructure of [nestedOptions] to separate "Animated Feature Films"

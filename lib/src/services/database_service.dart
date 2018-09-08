@@ -72,6 +72,7 @@ class DatabaseService {
   List<String> requestProjectAuthor = [], requestIds = [], requestProjectStartDates = [], requestProjectEndDates = [], requestProjectDescriptions = [], requestProjectAuthorIDs = [];
   bool invalidPassword;
   String currentGroup, teamCount, staffCount, currentGroupCount, gender;
+  List<dynamic> list = [], list2 = [];
 
   DatabaseService()  {
 
@@ -123,6 +124,8 @@ class DatabaseService {
         insuranceCpy = query.docs.first.data()['insuranceCpy'];
         emergencyContactName = query.docs.first.data()['emergencyContactName'];
         emergencyContactPhone = query.docs.first.data()['emergencyContactPhone'];
+        list = query.docs.first.data()['_list'];
+        list2 = query.docs.first.data()['_list2'];
       });
 
       fb.firestore().collection("projects").get().then((query){
@@ -182,7 +185,18 @@ class DatabaseService {
         });
     }
   }
-
+  Future updateCalendar(List<int> _list, List<int> _list2){
+    fb.firestore().runTransaction((transaction) async {
+      Map<String, Object> data = <String, Object>{};
+      DocumentReference reference = fb.firestore().doc("users/${user.uid}");
+      DocumentSnapshot snap = await reference.get();
+      data = snap.data();
+      data['_list'] = _list;
+      data['_list2'] = _list2;
+      print("DATA => => ${data}");
+      await reference.set(data);
+    });
+  }
 
   Future updatePrimary(Map<String, dynamic> values)async {
     fb.firestore().runTransaction((transaction) async {
@@ -232,6 +246,7 @@ class DatabaseService {
         });
       });
   }
+
 
   void acceptRequest(int idx){
     String requestId = requestIds[idx];
@@ -293,6 +308,8 @@ class DatabaseService {
       madeRequestDecision[idx] = true;
     });
   }
+
+
 
   void cancelRequest(int idx){
     String requestId = requestIds[idx];

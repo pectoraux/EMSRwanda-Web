@@ -42,4 +42,27 @@ class RequestsComponent {
 
   void settingsUpdated() {
   }
+
+  void onSave(int idx) {
+    dbService.acceptRequest(idx);
+  }
+
+  bool saveDisabled(int idx){
+    return dbService.madeRequestDecision[idx] || dbService.requestTypes[idx]=='Made By You';
+  }
+
+  void onCancel(int idx){
+    if(dbService.requestTypes[idx]=='Made By You'){
+      dbService.cancelRequest(idx);
+    }else{
+      dbService.rejectRequest(idx);
+    }
+  }
+
+  String getCancelText(idx){
+    if(dbService.requestTypes[idx]=='Made By You'){
+      return 'Cancel Request';
+    }
+      return 'Reject Request';
+  }
 }

@@ -67,10 +67,11 @@ class DatabaseService {
   String emergencyContactPhone, emergencyContactName, insurance, insuranceNo, insuranceCpy;
   List<String> projectOptions = [], projectIds = [], locationOptions = [], requestOptions = [], requestTypes = [], requestProjectIds = [];
   List<int> idxOptions = [], idxOptions2 = [];
-  List<bool> isStaff = [], sentWorkRequest = [];
+  List<bool> isStaff = [], sentWorkRequest = [], madeRequestDecision = [];
   List<String> author = [], startDates = [], endDates = [], descriptions = [], authorIDs = [];
-  List<String> requestProjectAuthor = [], requestProjectStartDates = [], requestProjectEndDates = [], requestProjectDescriptions = [], requestProjectAuthorIDs = [];
+  List<String> requestProjectAuthor = [], requestIds = [], requestProjectStartDates = [], requestProjectEndDates = [], requestProjectDescriptions = [], requestProjectAuthorIDs = [];
   bool invalidPassword;
+  String currentGroup, teamCount, staffCount, currentGroupCount, gender;
 
   DatabaseService()  {
 
@@ -146,6 +147,8 @@ class DatabaseService {
             requestOptions.add(doc.data()['projectTitle']);
             requestProjectIds.add(doc.data()['projectId']);
             requestTypes.add(doc.data()['type']);
+            requestIds.add(doc.id);
+            madeRequestDecision.add(false);
             idxOptions2.add(k);
             k += 1;
           });
@@ -214,7 +217,7 @@ class DatabaseService {
         Map<String, Object> request_data = <String, Object>{
           'projectId': projectId,
           'projectTitle': doc.data()['projectTitle'],
-          'to': user.uid,
+          'to': doc.data()['author'],
           'page': 'project_details',
           'from': user.uid,};
 
@@ -224,6 +227,95 @@ class DatabaseService {
           sentWorkRequest[idx] = true;
         });
       });
+  }
+
+  void acceptRequest(int idx){
+    String requestId = requestIds[idx];
+    String projectId = requestProjectIds[idx];
+    fb.firestore().runTransaction((transaction) async {
+      String mId;
+      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d){
+        if(d.data()['page'] == 'project_details'){
+          mId = d.data()['from'];
+        }else {
+          mId = user.uid;
+        }
+      }).whenComplete(() async {
+        //write projectId in user's projects
+        DocumentReference reference1 = fb.firestore().doc('users/${mId}/projects/${projectId}');
+        await reference1.set({});
+
+        // Get Gender
+        DocumentSnapshot userSnap = await (fb.firestore().doc('users/${mId}}')).get();
+        String gender = userSnap.data()['sex'].toString();
+        print("USER GENDER IS ${gender}");
+        // Inserting User's records in project
+        DocumentReference reference2 = fb.firestore().doc('projects/${projectId}/users/${mId}');
+        await reference2.set({
+          'comments': [],
+          'userGroup': (currentGroupCount == teamCount) ? int.parse(currentGroup)+1 : int.parse(currentGroup),
+          'communicationRating': -1.0,
+          'initiativeTakingRating': -1.0,
+          'overAllRating': -1.0,
+          'punctualityRating': -1.0,
+          'reportingRating': -1.0,
+          'sex': gender,
+        });
+      }).whenComplete(() async { // Update currentGroupCount and currentGroup in projects
+        fb.firestore().runTransaction((transaction) async {
+          DocumentReference reference = fb.firestore().doc('projects/${projectId}');
+          Map<String, Object> data = <String, Object>{};
+          DocumentReference projectRef = fb.firestore().doc("projects/${projectId}");
+          DocumentSnapshot snap = await reference.get();
+          data = snap.data();
+          data['currentGroupCount'] = (currentGroupCount == teamCount) ? 0 : int.parse(currentGroupCount) + 1;
+          data['currentGroup'] = (currentGroupCount == teamCount) ? int.parse(currentGroup) + 1 : int.parse(currentGroup);
+          await reference.set(data);
+        });
+      });
+    });
+
+// Delete Pending Requests
+    fb.firestore().runTransaction((transaction) async {
+      String mId;
+      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d){
+        mId =  d.data()['from'];
+      }).whenComplete((){
+        fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').delete();
+        fb.firestore().doc('users/${mId}/pending_requests/${requestId}').delete();
+        madeRequestDecision[idx] = true;
+      });
+    });
+  }
+
+  void cancelRequest(int idx){
+    String requestId = requestIds[idx];
+    fb.firestore().runTransaction((transaction) async {
+      String mId;
+      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d){
+        mId =  d.data()['to'];
+      }).whenComplete((){
+        fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').delete();
+        fb.firestore().doc('users/${mId}/pending_requests/${requestId}').delete();
+      });
+    }).whenComplete((){
+      madeRequestDecision[idx] = true;
+    });
+  }
+
+  void rejectRequest(int idx){
+    String requestId = requestIds[idx];
+    fb.firestore().runTransaction((transaction) async {
+      String mId;
+      fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').get().then((d){
+        mId =  d.data()['from'];
+      }).whenComplete((){
+        fb.firestore().doc('users/${user.uid}/pending_requests/${requestId}').delete();
+        fb.firestore().doc('users/${mId}/pending_requests/${requestId}').delete();
+      });
+    }).whenComplete((){
+      madeRequestDecision[idx] = true;
+    });
   }
 
   Future gotToSaveMode(Map<String, dynamic> values)async{

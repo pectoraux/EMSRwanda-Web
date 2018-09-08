@@ -3,8 +3,8 @@
     <material-expansionpanel *ngFor="let idx of dbService.idxOptions2"
                              name= '{{dbService.requestOptions[idx]}}'
                              secondaryText='{{dbService.requestTypes[idx]}}' saveText = "Accept Request"
-                             cancelText="Reject Request"
-                             [saveDisabled]="dbService.requestTypes[idx]=='Made By You'">
+                             cancelText="{{getCancelText(idx)}}" [saveDisabled]="saveDisabled(idx)" (save)="onSave(idx)"
+                             [cancelDisplayed]="!dbService.madeRequestDecision[idx]" (cancel)="onCancel(idx)">
       <!--<div>-->
       <!--<p><strong>Made By:</strong>  {{dbService.requestProjectAuthorIDs[idx]}}</p>-->
       <!--<p><strong>Start Date:</strong> {{dbService.requestProjectStartDates[idx]}}</p>-->

@@ -48,5 +48,4 @@ class ProjectsComponent {
   bool saveDisabled(int idx){
     return dbService.isStaff[idx] || dbService.requestProjectIds.contains(dbService.projectIds[idx]) || dbService.sentWorkRequest[idx];
   }
-
 }
